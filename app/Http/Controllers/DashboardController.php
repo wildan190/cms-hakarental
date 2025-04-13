@@ -16,7 +16,8 @@ class DashboardController extends Controller
         $blogs = Blog::where('user_id', $user->id)->latest()->get();
 
         return response()->json([
-            'message' => 'Hello World, ' . $user->name,
+            // 'message' => 'Hello World, ' . $user->name,
+            'message' =>$user->name,
             'blogs' => $blogs,
         ]);
     }
