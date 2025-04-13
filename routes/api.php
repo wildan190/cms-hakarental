@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -12,3 +13,12 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/admin/dashboard', [DashboardController::class, 'index']);
+
+
+Route::middleware('auth:sanctum')->prefix('admin/blogs')->group(function () {
+    Route::get('/', [BlogController::class, 'index']);
+    Route::post('/', [BlogController::class, 'store']);
+    Route::get('{id}', [BlogController::class, 'show']);
+    Route::put('{id}', [BlogController::class, 'update']);
+    Route::delete('{id}', [BlogController::class, 'destroy']);
+});
