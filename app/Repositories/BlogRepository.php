@@ -16,24 +16,33 @@ class BlogRepository implements BlogRepositoryInterface
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required',
-            'status' => 'required|in:publish,draft',
-        ]);
+{
+    $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required',
+        'status' => 'required|in:publish,draft',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+    ]);
 
-        $blog = Blog::create([
-            'user_id' => Auth::id(),
-            'title' => $request->title,
-            'slug' => Str::slug($request->title) . '-' . uniqid(),
-            'content' => $request->content,
-            'status' => $request->status,
-            'date_published' => $request->status === 'publish' ? now() : null,
-        ]);
+    $imagePath = null;
 
-        return response()->json($blog, 201);
+    if ($request->hasFile('image')) {
+        $imagePath = $request->file('image')->store('blogs', 'public');
     }
+
+    $blog = Blog::create([
+        'user_id' => Auth::id(),
+        'title' => $request->title,
+        'slug' => Str::slug($request->title) . '-' . uniqid(),
+        'image' => $imagePath,
+        'content' => $request->content,
+        'status' => $request->status,
+        'date_published' => $request->status === 'publish' ? now() : null,
+    ]);
+
+    return response()->json($blog, 201);
+}
+
 
     public function show($id)
     {
@@ -43,23 +52,29 @@ class BlogRepository implements BlogRepositoryInterface
     public function update(Request $request, $id)
     {
         $blog = Blog::findOrFail($id);
-
+    
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
             'content' => 'sometimes|required',
             'status' => 'sometimes|in:publish,draft',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
-
-        $blog->update([
-            'title' => $request->title ?? $blog->title,
-            'slug' => $request->title ? Str::slug($request->title) . '-' . uniqid() : $blog->slug,
-            'content' => $request->content ?? $blog->content,
-            'status' => $request->status ?? $blog->status,
-            'date_published' => $request->status === 'publish' ? now() : $blog->date_published,
-        ]);
-
+    
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('blogs', 'public');
+            $blog->image = $imagePath;
+        }
+    
+        $blog->title = $request->title ?? $blog->title;
+        $blog->slug = $request->title ? Str::slug($request->title) . '-' . uniqid() : $blog->slug;
+        $blog->content = $request->content ?? $blog->content;
+        $blog->status = $request->status ?? $blog->status;
+        $blog->date_published = $request->status === 'publish' ? now() : $blog->date_published;
+    
+        $blog->save();
+    
         return response()->json($blog);
-    }
+    }    
 
     public function destroy($id)
     {
