@@ -62,20 +62,33 @@ class BlogRepository implements BlogRepositoryInterface
         ]);
     
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('blogs', 'public');
-            $blog->image = $imagePath;
+            // hapus gambar lama
+            if ($blog->image && Storage::disk('public')->exists($blog->image)) {
+                Storage::disk('public')->delete($blog->image);
+            }
+    
+            $blog->image = $request->file('image')->store('blogs', 'public');
         }
     
-        $blog->title = $request->title ?? $blog->title;
-        $blog->slug = $request->title ? Str::slug($request->title) . '-' . uniqid() : $blog->slug;
-        $blog->content = $request->content ?? $blog->content;
-        $blog->status = $request->status ?? $blog->status;
-        $blog->date_published = $request->status === 'publish' ? now() : $blog->date_published;
+        if ($request->filled('title')) {
+            $blog->title = $request->title;
+            $blog->slug = Str::slug($request->title) . '-' . uniqid();
+        }
     
-        $blog->save();
+        if ($request->filled('content')) {
+            $blog->content = $request->content;
+        }
+    
+        if ($request->filled('status')) {
+            $blog->status = $request->status;
+            $blog->date_published = $request->status === 'publish' ? now() : null;
+        }
+    
+        $blog->save(); // wajib!
     
         return response()->json($blog);
-    }    
+    }
+     
 
     public function destroy($id)
     {
