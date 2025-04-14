@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Repositories\Interface\BlogRepositoryInterface;
+use Illuminate\Support\Facades\Storage;
 
 class BlogRepository implements BlogRepositoryInterface
 {
@@ -79,8 +80,14 @@ class BlogRepository implements BlogRepositoryInterface
     public function destroy($id)
     {
         $blog = Blog::findOrFail($id);
+    
+        // Hapus file gambar jika ada
+        if ($blog->image && Storage::disk('public')->exists($blog->image)) {
+            Storage::disk('public')->delete($blog->image);
+        }
+    
         $blog->delete();
-
-        return response()->json(['message' => 'Blog deleted successfully']);
+    
+        return response()->json(['message' => 'Blog and image deleted successfully']);
     }
 }
