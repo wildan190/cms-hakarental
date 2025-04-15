@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\MetadataController;
 use App\Http\Controllers\MobilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,4 +40,12 @@ Route::middleware('auth:sanctum')->prefix('admin/galleries')->group(function () 
     Route::get('/{id}', [GalleryController::class, 'show']);
     Route::put('/{id}', [GalleryController::class, 'update']);
     Route::delete('/{id}', [GalleryController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->prefix('admin/metadata')->group(function () {
+    Route::get('/', [MetadataController::class, 'index']);
+    Route::post('/', [MetadataController::class, 'store']);
+    Route::get('/{id}', [MetadataController::class, 'show']);
+    Route::put('/{id}', [MetadataController::class, 'update']);
+    Route::delete('/{id}', [MetadataController::class, 'destroy']);
 });
