@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MobilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,12 @@ Route::middleware('auth:sanctum')->prefix('admin/blogs')->group(function () {
     Route::get('{id}', [BlogController::class, 'show']);
     Route::put('{id}', [BlogController::class, 'update']);
     Route::delete('{id}', [BlogController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->prefix('admin/mobils')->group(function () {
+    Route::get('/', [MobilController::class, 'index']);
+    Route::post('/', [MobilController::class, 'store']);
+    Route::get('/{id}', [MobilController::class, 'show']);
+    Route::put('/{id}', [MobilController::class, 'update']);
+    Route::delete('/{id}', [MobilController::class, 'destroy']);
 });
