@@ -90,15 +90,12 @@ class MobilRepository implements MobilRepositoryInterface
                 Storage::disk('public')->delete($mobil->image);
             }
 
-            $mobil->image = 'storage/' . $request->file('image')->store('mobils', 'public');
+            $mobil->image = $request->file('image')->store('mobils', 'public');
         }
 
         $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']));
 
-        return response()->json([
-            'message' => 'Mobil berhasil diperbarui',
-            'data' => $mobil
-        ], 200);
+        return $mobil;
     }
 
     public function destroy($id)
