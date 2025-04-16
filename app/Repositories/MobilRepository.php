@@ -81,8 +81,8 @@ class MobilRepository implements MobilRepositoryInterface
             'description' => 'sometimes|required|string',
             'transmission' => 'sometimes|required|string',
             'seat' => 'sometimes|required|integer',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'harga' => 'required|numeric',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'harga' => 'nullable|numeric',
         ]);
 
         if ($request->hasFile('image')) {
@@ -93,9 +93,12 @@ class MobilRepository implements MobilRepositoryInterface
             $mobil->image = $request->file('image')->store('mobils', 'public');
         }
 
-        $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'image', 'harga']));
+        $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']));
 
-        return $mobil;
+        return response()->json([
+            'message' => 'Mobil berhasil diperbarui',
+            'data' => $mobil
+        ], 200);
     }
 
     public function destroy($id)
