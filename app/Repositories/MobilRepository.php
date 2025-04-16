@@ -90,7 +90,7 @@ class MobilRepository implements MobilRepositoryInterface
                 Storage::disk('public')->delete($mobil->image);
             }
 
-            $mobil->image = $request->file('image')->store('mobils', 'public');
+            $mobil->image = 'storage/' . $request->file('image')->store('mobils', 'public');
         }
 
         $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']));
