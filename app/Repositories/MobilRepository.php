@@ -95,7 +95,10 @@ class MobilRepository implements MobilRepositoryInterface
 
         $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']));
 
-        return $mobil;
+        return response()->json([
+            'message' => 'Mobil berhasil diperbarui',
+            'data' => $mobil
+        ], 200);
     }
 
     public function destroy($id)
