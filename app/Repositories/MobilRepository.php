@@ -24,7 +24,7 @@ class MobilRepository implements MobilRepositoryInterface
                 'description' => 'required|string',
                 'transmission' => 'required|string',
                 'seat' => 'required|integer',
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
             ]);
     
             $imagePath = null;
