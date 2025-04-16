@@ -93,10 +93,13 @@ class MobilRepository implements MobilRepositoryInterface
             $mobil->image = $request->file('image')->store('mobils', 'public');
         }
 
-        $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']));
+        $mobil->update(array_merge(
+            $request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']),
+            ['image' => $mobil->image]
+        ));
 
         return response()->json([
-            'message' => 'Mobil berhasil diperbarui',
+            'message' => 'Data mobil berhasil diperbarui',
             'data' => $mobil
         ], 200);
     }
