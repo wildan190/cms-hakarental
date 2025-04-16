@@ -81,8 +81,8 @@ class MobilRepository implements MobilRepositoryInterface
             'description' => 'sometimes|required|string',
             'transmission' => 'sometimes|required|string',
             'seat' => 'sometimes|required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'harga' => 'nullable|numeric',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'harga' => 'required|numeric',
         ]);
 
         if ($request->hasFile('image')) {
