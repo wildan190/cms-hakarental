@@ -72,36 +72,50 @@ class MobilRepository implements MobilRepositoryInterface
 
     public function update(Request $request, $id)
     {
-        $mobil = Mobil::findOrFail($id);
+        try {
+            $mobil = Mobil::findOrFail($id);
 
-        $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'type' => 'sometimes|required|string',
-            'merk' => 'sometimes|required|string',
-            'description' => 'sometimes|required|string',
-            'transmission' => 'sometimes|required|string',
-            'seat' => 'sometimes|required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'harga' => 'nullable|numeric',
-        ]);
+            $request->validate([
+                'name' => 'sometimes|required|string|max:255',
+                'type' => 'sometimes|required|string',
+                'merk' => 'sometimes|required|string',
+                'description' => 'sometimes|required|string',
+                'transmission' => 'sometimes|required|string',
+                'seat' => 'sometimes|required|integer',
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'harga' => 'nullable|numeric',
+            ]);
 
-        if ($request->hasFile('image')) {
-            if ($mobil->image && Storage::disk('public')->exists($mobil->image)) {
-                Storage::disk('public')->delete($mobil->image);
+            if ($request->hasFile('image')) {
+                if ($mobil->image && Storage::disk('public')->exists($mobil->image)) {
+                    Storage::disk('public')->delete($mobil->image);
+                }
+
+                $mobil->image = $request->file('image')->store('mobils', 'public');
             }
 
-            $mobil->image = $request->file('image')->store('mobils', 'public');
+            $mobil->update(array_merge(
+                $request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']),
+                ['image' => $mobil->image]
+            ));
+
+            return response()->json([
+                'message' => 'Data mobil berhasil diperbarui',
+                'data' => $mobil
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Validasi gagal',
+                'errors' => $e->errors()
+            ], 422);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Terjadi kesalahan saat memperbarui mobil',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $mobil->update(array_merge(
-            $request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']),
-            ['image' => $mobil->image]
-        ));
-
-        return response()->json([
-            'message' => 'Data mobil berhasil diperbarui',
-            'data' => $mobil
-        ], 200);
     }
 
     public function destroy($id)
