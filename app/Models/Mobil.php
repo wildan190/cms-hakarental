@@ -17,5 +17,6 @@ class Mobil extends Model
         'transmission',
         'seat',
         'image',
+        'harga',
     ];
 }

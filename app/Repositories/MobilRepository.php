@@ -24,7 +24,8 @@ class MobilRepository implements MobilRepositoryInterface
                 'description' => 'required|string',
                 'transmission' => 'required|string',
                 'seat' => 'required|integer',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'harga' => 'nullable|numeric',
             ]);
     
             $imagePath = null;
@@ -40,7 +41,8 @@ class MobilRepository implements MobilRepositoryInterface
                 'description' => $request->description,
                 'transmission' => $request->transmission,
                 'seat' => $request->seat,
-                'image' => $imagePath
+                'image' => $imagePath,
+                'harga' => $request->harga,
             ]);
     
             return response()->json([
@@ -79,7 +81,8 @@ class MobilRepository implements MobilRepositoryInterface
             'description' => 'sometimes|required|string',
             'transmission' => 'sometimes|required|string',
             'seat' => 'sometimes|required|integer',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'harga' => 'nullable|numeric',
         ]);
 
         if ($request->hasFile('image')) {
@@ -90,7 +93,7 @@ class MobilRepository implements MobilRepositoryInterface
             $mobil->image = $request->file('image')->store('mobils', 'public');
         }
 
-        $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat']));
+        $mobil->update($request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'image', 'harga']));
 
         return $mobil;
     }
