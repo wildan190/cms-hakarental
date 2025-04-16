@@ -12,7 +12,7 @@ class HomeController extends Controller
     public function index()
     {
         $gallery = Gallery::latest()->take(6)->get();
-        $mobil = Mobil::latest()->take(6)->get();
+        $mobil = Mobil::whereIn('name', ['avanza', 'sigra', 'reborn', 'zenix'])->latest()->take(4)->get();
         $testimoni = Testimoni::latest()->take(6)->get();
 
         return response()->json([
