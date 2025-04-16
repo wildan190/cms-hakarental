@@ -95,9 +95,7 @@ class MobilRepository implements MobilRepositoryInterface
             }
 
             $updateData = $request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']);
-            if ($mobil->image) {
-                $updateData['image'] = $mobil->image;
-            }
+            $updateData['image'] = $mobil->image; // Ensure the image field is always included
 
             $mobil->update($updateData);
 
