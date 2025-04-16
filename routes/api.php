@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\MetadataController;
 use App\Http\Controllers\MobilController;
+use App\Http\Controllers\TestimoniController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -48,4 +49,12 @@ Route::middleware('auth:sanctum')->prefix('admin/metadata')->group(function () {
     Route::get('/{id}', [MetadataController::class, 'show']);
     Route::put('/{id}', [MetadataController::class, 'update']);
     Route::delete('/{id}', [MetadataController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->prefix('admin/testimoni')->group(function () {
+    Route::get('/', [TestimoniController::class, 'index']);
+    Route::post('/', [TestimoniController::class, 'store']);
+    Route::get('/{id}', [TestimoniController::class, 'show']);
+    Route::put('/{id}', [TestimoniController::class, 'update']);
+    Route::delete('/{id}', [TestimoniController::class, 'destroy']);
 });

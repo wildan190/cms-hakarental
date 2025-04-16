@@ -10,8 +10,10 @@ use App\Repositories\Interface\BlogRepositoryInterface;
 use App\Repositories\Interface\GalleryRepositoryInterface;
 use App\Repositories\Interface\MetadataRepositoryInterface;
 use App\Repositories\Interface\MobilRepositoryInterface;
+use App\Repositories\Interface\TestimoniRepositoryInterface;
 use App\Repositories\MetadataRepository;
 use App\Repositories\MobilRepository;
+use App\Repositories\TestimoniRepository;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(MobilRepositoryInterface::class, MobilRepository::class);
         $this->app->bind(GalleryRepositoryInterface::class, GalleryRepository::class);
         $this->app->bind(MetadataRepositoryInterface::class, MetadataRepository::class);
+        $this->app->bind(TestimoniRepositoryInterface::class, TestimoniRepository::class);
     }
 
     /**
