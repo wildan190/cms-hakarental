@@ -74,7 +74,8 @@ class MobilRepository implements MobilRepositoryInterface
     {
         try {
             $mobil = Mobil::findOrFail($id);
-
+    
+            // Validasi input
             $request->validate([
                 'name' => 'sometimes|required|string|max:255',
                 'type' => 'sometimes|required|string',
@@ -85,31 +86,43 @@ class MobilRepository implements MobilRepositoryInterface
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'harga' => 'nullable|numeric',
             ]);
-
+    
+            // Jika ada file gambar baru
             if ($request->hasFile('image')) {
+                // Hapus gambar lama jika ada
                 if ($mobil->image && Storage::disk('public')->exists($mobil->image)) {
                     Storage::disk('public')->delete($mobil->image);
                 }
-
+    
+                // Simpan gambar baru
                 $mobil->image = $request->file('image')->store('mobils', 'public');
             }
-
-            $updateData = $request->only(['name', 'type', 'merk', 'description', 'transmission', 'seat', 'harga']);
-            $updateData['image'] = $mobil->image; // Ensure the image field is always included
-
-            $mobil->update($updateData);
-
+    
+            // Update data lain
+            $mobil->fill($request->only([
+                'name',
+                'type',
+                'merk',
+                'description',
+                'transmission',
+                'seat',
+                'harga',
+            ]));
+    
+            // Simpan perubahan ke database
+            $mobil->save();
+    
             return response()->json([
                 'message' => 'Data mobil berhasil diperbarui',
                 'data' => $mobil
             ], 200);
-
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Validasi gagal',
                 'errors' => $e->errors()
             ], 422);
-
+    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan saat memperbarui mobil',
@@ -117,6 +130,7 @@ class MobilRepository implements MobilRepositoryInterface
             ], 500);
         }
     }
+    
 
     public function destroy($id)
     {
