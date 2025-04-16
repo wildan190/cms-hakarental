@@ -61,7 +61,7 @@ Route::middleware('auth:sanctum')->prefix('admin/metadata')->group(function () {
     Route::delete('/{id}', [MetadataController::class, 'destroy']);
 });
 
-Route::prefix('web/testimoni')->group(function () {
+Route::middleware('auth:sanctum')->prefix('web/testimoni')->group(function () {
     Route::get('/', [TestimoniController::class, 'index']);
     Route::post('/', [TestimoniController::class, 'store']);
     Route::get('/{id}', [TestimoniController::class, 'show']);
