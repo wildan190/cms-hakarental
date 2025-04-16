@@ -22,10 +22,8 @@ class WebMobilController extends Controller
             });
         }        
 
-        // Filter: seat
         if ($request->has('seat')) {
-            $seat = strtolower($request->seat);
-            $mobil->whereRaw('LOWER(seat) = ?', [$seat]);
+            $mobil->where('seat', $request->seat);
         }
 
         // Filter: merk
