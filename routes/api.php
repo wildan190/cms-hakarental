@@ -9,12 +9,14 @@ use App\Http\Controllers\MobilController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\WebBlogController;
+use App\Http\Controllers\Web\WebMobilController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/web/home', [HomeController::class, 'index']);
 Route::get('/web/blog', [WebBlogController::class, 'index']);
 Route::get('/web/blog/{slug}', [WebBlogController::class, 'show']);
+Route::get('/web/mobil', [WebMobilController::class, 'index']);
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
