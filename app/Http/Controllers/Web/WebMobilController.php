@@ -24,17 +24,20 @@ class WebMobilController extends Controller
 
         // Filter: seat
         if ($request->has('seat')) {
-            $mobil->where('seat', $request->seat);
+            $seat = strtolower($request->seat);
+            $mobil->whereRaw('LOWER(seat) = ?', [$seat]);
         }
 
         // Filter: merk
         if ($request->has('merk')) {
-            $mobil->where('merk', $request->merk);
+            $merk = strtolower($request->merk);
+            $mobil->whereRaw('LOWER(merk) = ?', [$merk]);
         }
 
         // Filter: transmission (otomatis / manual)
         if ($request->has('transmission')) {
-            $mobil->where('transmission', $request->transmission);
+            $transmission = strtolower($request->transmission);
+            $mobil->whereRaw('LOWER(transmission) = ?', [$transmission]);
         }
 
         return response()->json($mobil->latest()->get());
