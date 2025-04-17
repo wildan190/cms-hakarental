@@ -10,6 +10,7 @@ use App\Http\Controllers\MobilController;
 use App\Http\Controllers\TestimoniController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\WebBlogController;
+use App\Http\Controllers\Web\WebFaqController;
 use App\Http\Controllers\Web\WebKontakController;
 use App\Http\Controllers\Web\WebMobilController;
 use App\Http\Controllers\Web\WebTestimoniController;
@@ -22,6 +23,7 @@ Route::get('/web/mobil', [WebMobilController::class, 'index']);
 Route::get('/web/kontak', [WebKontakController::class, 'index']);
 Route::get('/web/testimoni', [WebTestimoniController::class, 'index']);
 Route::post('/web/testimoni', [WebTestimoniController::class, 'store']);
+Route::get('/web/faq', [WebFaqController::class, 'index']);
 
 Route::prefix('auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
