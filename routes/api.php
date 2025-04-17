@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\MetadataController;
 use App\Http\Controllers\MobilController;
@@ -68,4 +69,12 @@ Route::middleware('auth:sanctum')->prefix('admin/testimoni')->group(function () 
     Route::get('/{id}', [TestimoniController::class, 'show']);
     Route::put('/{id}', [TestimoniController::class, 'update']);
     Route::delete('/{id}', [TestimoniController::class, 'destroy']);
+});
+
+Route::middleware('auth:sanctum')->prefix('admin/faqs')->group(function () {
+    Route::get('/', [FaqController::class, 'index']);
+    Route::post('/', [FaqController::class, 'store']);
+    Route::get('/{id}', [FaqController::class, 'show']);
+    Route::put('/{id}', [FaqController::class, 'update']);
+    Route::delete('/{id}', [FaqController::class, 'destroy']);
 });

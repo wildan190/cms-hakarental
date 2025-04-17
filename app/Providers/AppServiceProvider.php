@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Repositories\AuthRepository;
 use App\Repositories\BlogRepository;
+use App\Repositories\FaqRepository;
 use App\Repositories\GalleryRepository;
 use App\Repositories\Interface\AuthRepositoryInterface;
 use App\Repositories\Interface\BlogRepositoryInterface;
+use App\Repositories\Interface\FaqRepositoryInterface;
 use App\Repositories\Interface\GalleryRepositoryInterface;
 use App\Repositories\Interface\MetadataRepositoryInterface;
 use App\Repositories\Interface\MobilRepositoryInterface;
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(GalleryRepositoryInterface::class, GalleryRepository::class);
         $this->app->bind(MetadataRepositoryInterface::class, MetadataRepository::class);
         $this->app->bind(TestimoniRepositoryInterface::class, TestimoniRepository::class);
+        $this->app->bind(FaqRepositoryInterface::class, FaqRepository::class);
     }
 
     /**
