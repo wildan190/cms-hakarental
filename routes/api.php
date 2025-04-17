@@ -12,7 +12,6 @@ use App\Http\Controllers\Web\WebBlogController;
 use App\Http\Controllers\Web\WebKontakController;
 use App\Http\Controllers\Web\WebMobilController;
 use App\Http\Controllers\Web\WebTestimoniController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/web/home', [HomeController::class, 'index']);
@@ -30,7 +29,6 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::middleware('auth:sanctum')->get('/admin/dashboard', [DashboardController::class, 'index']);
-
 
 Route::middleware('auth:sanctum')->prefix('admin/blogs')->group(function () {
     Route::get('/', [BlogController::class, 'index']);

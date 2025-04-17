@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Repositories\Interface\TestimoniRepositoryInterface;
+use Illuminate\Http\Request;
 
 class TestimoniController extends Controller
 {

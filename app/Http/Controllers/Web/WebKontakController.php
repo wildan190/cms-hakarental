@@ -12,13 +12,13 @@ class WebKontakController extends Controller
         $metadata = Metadata::first();
 
         return response()->json([
-            'phone'        => $metadata?->phone,
-            'email'        => $metadata?->email,
-            'address'      => $metadata?->address,
-            'facebook'     => $metadata?->facebook,
-            'instagram'    => $metadata?->instagram,
-            'twitter'      => $metadata?->twitter,
-            'linkedin'     => $metadata?->linkedin,
+            'phone' => $metadata?->phone,
+            'email' => $metadata?->email,
+            'address' => $metadata?->address,
+            'facebook' => $metadata?->facebook,
+            'instagram' => $metadata?->instagram,
+            'twitter' => $metadata?->twitter,
+            'linkedin' => $metadata?->linkedin,
             'website_name' => $metadata?->website_name,
         ]);
     }

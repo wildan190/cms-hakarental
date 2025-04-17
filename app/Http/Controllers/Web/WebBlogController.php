@@ -10,8 +10,8 @@ class WebBlogController extends Controller
     public function index()
     {
         $blogs = Blog::where('status', 'publish')
-                     ->latest()
-                     ->get();
+            ->latest()
+            ->get();
 
         return response()->json($blogs);
     }
@@ -19,8 +19,8 @@ class WebBlogController extends Controller
     public function show($slug)
     {
         $blog = Blog::where('slug', $slug)
-                    ->where('status', 'publish')
-                    ->firstOrFail();
+            ->where('status', 'publish')
+            ->firstOrFail();
 
         return response()->json($blog);
     }

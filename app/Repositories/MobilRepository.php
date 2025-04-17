@@ -27,13 +27,13 @@ class MobilRepository implements MobilRepositoryInterface
                 'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'harga' => 'nullable|numeric',
             ]);
-    
+
             $imagePath = null;
-    
+
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('mobils', 'public');
             }
-    
+
             $mobil = Mobil::create([
                 'name' => $request->name,
                 'type' => $request->type,
@@ -44,26 +44,23 @@ class MobilRepository implements MobilRepositoryInterface
                 'image' => $imagePath,
                 'harga' => $request->harga,
             ]);
-    
+
             return response()->json([
                 'message' => 'Mobil berhasil disimpan',
-                'data' => $mobil
+                'data' => $mobil,
             ], 201);
-    
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Validasi gagal',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan saat menyimpan mobil',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
-    
 
     public function show($id)
     {
@@ -74,7 +71,7 @@ class MobilRepository implements MobilRepositoryInterface
     {
         try {
             $mobil = Mobil::findOrFail($id);
-    
+
             // Validasi input
             $request->validate([
                 'name' => 'sometimes|required|string|max:255',
@@ -86,18 +83,18 @@ class MobilRepository implements MobilRepositoryInterface
                 'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
                 'harga' => 'nullable|numeric',
             ]);
-    
+
             // Jika ada file gambar baru
             if ($request->hasFile('image')) {
                 // Hapus gambar lama jika ada
                 if ($mobil->image && Storage::disk('public')->exists($mobil->image)) {
                     Storage::disk('public')->delete($mobil->image);
                 }
-    
+
                 // Simpan gambar baru
                 $mobil->image = $request->file('image')->store('mobils', 'public');
             }
-    
+
             // Update data lain
             $mobil->fill($request->only([
                 'name',
@@ -108,29 +105,26 @@ class MobilRepository implements MobilRepositoryInterface
                 'seat',
                 'harga',
             ]));
-    
+
             // Simpan perubahan ke database
             $mobil->save();
-    
+
             return response()->json([
                 'message' => 'Data mobil berhasil diperbarui',
-                'data' => $mobil
+                'data' => $mobil,
             ], 200);
-    
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Validasi gagal',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
-    
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Terjadi kesalahan saat memperbarui mobil',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
-    
 
     public function destroy($id)
     {

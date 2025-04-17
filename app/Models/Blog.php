@@ -26,7 +26,7 @@ class Blog extends Model
 
         static::creating(function ($blog) {
             if (empty($blog->slug)) {
-                $blog->slug = Str::slug($blog->title) . '-' . uniqid();
+                $blog->slug = Str::slug($blog->title).'-'.uniqid();
             }
         });
     }

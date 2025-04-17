@@ -18,14 +18,14 @@ class GalleryRepository implements GalleryRepositoryInterface
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $imagePath = $request->file('image')->store('galleries', 'public');
 
         return Gallery::create([
             'title' => $request->title,
-            'image' => $imagePath
+            'image' => $imagePath,
         ]);
     }
 
@@ -40,7 +40,7 @@ class GalleryRepository implements GalleryRepositoryInterface
 
         $request->validate([
             'title' => 'sometimes|required|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($request->hasFile('image')) {

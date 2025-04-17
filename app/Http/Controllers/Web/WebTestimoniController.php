@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Testimoni;
+use Illuminate\Http\Request;
 
 class WebTestimoniController extends Controller
 {
@@ -20,22 +20,22 @@ class WebTestimoniController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|string|max:100',
-            'rate'     => 'required|integer|min:1|max:5',
-            'email'    => 'nullable|email|max:100',
+            'name' => 'required|string|max:100',
+            'rate' => 'required|integer|min:1|max:5',
+            'email' => 'nullable|email|max:100',
             'feedback' => 'required|string',
         ]);
 
         $testimoni = Testimoni::create([
-            'name'     => $request->name,
-            'rate'     => $request->rate,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'rate' => $request->rate,
+            'email' => $request->email,
             'feedback' => $request->feedback,
         ]);
 
         return response()->json([
-            'message'   => 'Testimoni berhasil disimpan',
-            'testimoni' => $testimoni
+            'message' => 'Testimoni berhasil disimpan',
+            'testimoni' => $testimoni,
         ], 201);
     }
 }

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Mobil;
+use Illuminate\Http\Request;
 
 class WebMobilController extends Controller
 {
@@ -17,10 +17,10 @@ class WebMobilController extends Controller
             $search = strtolower($request->search);
             $mobil->where(function ($q) use ($search) {
                 $q->whereRaw('LOWER(name) LIKE ?', ["%$search%"])
-                  ->orWhereRaw('LOWER(merk) LIKE ?', ["%$search%"])
-                  ->orWhereRaw('LOWER(type) LIKE ?', ["%$search%"]);
+                    ->orWhereRaw('LOWER(merk) LIKE ?', ["%$search%"])
+                    ->orWhereRaw('LOWER(type) LIKE ?', ["%$search%"]);
             });
-        }        
+        }
 
         if ($request->has('seat')) {
             $mobil->where('seat', $request->seat);

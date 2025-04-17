@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Interface\BlogRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use App\Repositories\Interface\BlogRepositoryInterface;
 
 class BlogController extends Controller
 {

@@ -32,14 +32,14 @@ class MetadataRepository implements MetadataRepositoryInterface
         ]);
 
         return Metadata::create($request->only([
-            'phone', 
-            'email', 
-            'address', 
-            'facebook', 
-            'instagram', 
-            'twitter', 
-            'linkedin', 
-            'website_name'
+            'phone',
+            'email',
+            'address',
+            'facebook',
+            'instagram',
+            'twitter',
+            'linkedin',
+            'website_name',
         ]));
     }
 
@@ -52,14 +52,14 @@ class MetadataRepository implements MetadataRepositoryInterface
     {
         $metadata = Metadata::first(); // Karena hanya ada satu data
         $metadata->update($request->only([
-            'phone', 
-            'email', 
-            'address', 
-            'facebook', 
-            'instagram', 
-            'twitter', 
-            'linkedin', 
-            'website_name'
+            'phone',
+            'email',
+            'address',
+            'facebook',
+            'instagram',
+            'twitter',
+            'linkedin',
+            'website_name',
         ]));
 
         return $metadata;

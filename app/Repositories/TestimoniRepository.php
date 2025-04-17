@@ -3,8 +3,8 @@
 namespace App\Repositories;
 
 use App\Models\Testimoni;
-use Illuminate\Http\Request;
 use App\Repositories\Interface\TestimoniRepositoryInterface;
+use Illuminate\Http\Request;
 
 class TestimoniRepository implements TestimoniRepositoryInterface
 {
@@ -42,6 +42,7 @@ class TestimoniRepository implements TestimoniRepositoryInterface
         ]);
 
         $testimoni->update($request->only(['name', 'rate', 'email', 'feedback']));
+
         return $testimoni;
     }
 

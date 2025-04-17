@@ -18,7 +18,7 @@ class HomeController extends Controller
         return response()->json([
             'gallery' => $gallery,
             'mobil' => $mobil,
-            'testimoni' => $testimoni
+            'testimoni' => $testimoni,
         ]);
     }
 }
