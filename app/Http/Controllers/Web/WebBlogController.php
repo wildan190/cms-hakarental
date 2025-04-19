@@ -4,24 +4,25 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\Request;
 
 class WebBlogController extends Controller
 {
     public function index(Request $request)
     {
-        $cacheKey = 'web_blog_all';
+        $page = $request->get('page', 1);
+        $perPage = 6;
+        $cacheKey = "web_blogs_page_{$page}";
 
-        $blogs = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () {
+        $blogs = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
             return Blog::where('status', 'publish')
                 ->latest()
-                ->get();
+                ->paginate($perPage);
         });
 
-        // Simpan cookie halaman yang sedang dilihat (hanya info, tidak memengaruhi data)
-        $cookie = Cookie::make('last_blog_list_viewed', now()->toDateTimeString(), 60);
+        $cookie = Cookie::make('last_blog_page', $page, 60);
 
         return response()->json($blogs)->withCookie($cookie);
     }
@@ -36,8 +37,7 @@ class WebBlogController extends Controller
                 ->firstOrFail();
         });
 
-        // Simpan cookie slug artikel terakhir yang dibuka
-        $cookie = Cookie::make('last_blog_opened', $slug, 60);
+        $cookie = Cookie::make('last_blog_slug', $slug, 60);
 
         return response()->json($blog)->withCookie($cookie);
     }
