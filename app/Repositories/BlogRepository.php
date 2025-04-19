@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 
 class BlogRepository implements BlogRepositoryInterface
 {
@@ -40,6 +42,8 @@ class BlogRepository implements BlogRepositoryInterface
             'status' => $request->status,
             'date_published' => $request->status === 'publish' ? now() : null,
         ]);
+
+        Cache::store('redis')->put("web_blog_slug_{$blog->slug}", $blog, now()->addMinutes(10));
 
         return response()->json($blog, 201);
     }
@@ -85,6 +89,8 @@ class BlogRepository implements BlogRepositoryInterface
 
         $blog->save(); // wajib!
 
+        Cache::store('redis')->forget("web_blog_slug_{$blog->slug}");
+
         return response()->json($blog);
     }
 
@@ -98,6 +104,8 @@ class BlogRepository implements BlogRepositoryInterface
         }
 
         $blog->delete();
+
+        Cache::store('redis')->forget("web_blog_slug_{$blog->slug}");
 
         return response()->json(['message' => 'Blog and image deleted successfully']);
     }
