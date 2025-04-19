@@ -4,43 +4,24 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
 
 class WebBlogController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $page = $request->get('page', 1);
-        $perPage = 6;
-        $cacheKey = "web_blogs_page_{$page}";
+        $blogs = Blog::where('status', 'publish')
+            ->latest()
+            ->get();
 
-        $blogs = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
-            return Blog::where('status', 'publish')
-                ->latest()
-                ->paginate($perPage);
-        });
-
-        // Simpan cookie halaman terakhir
-        $cookie = Cookie::make('last_blog_page', $page, 60); // 60 menit
-
-        return response()->json($blogs)->withCookie($cookie);
+        return response()->json($blogs);
     }
 
     public function show($slug)
     {
-        $cacheKey = "web_blog_slug_{$slug}";
+        $blog = Blog::where('slug', $slug)
+            ->where('status', 'publish')
+            ->firstOrFail();
 
-        $blog = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($slug) {
-            return Blog::where('slug', $slug)
-                ->where('status', 'publish')
-                ->firstOrFail();
-        });
-
-        // Simpan cookie slug terakhir yang dibuka
-        $cookie = Cookie::make('last_blog_slug', $slug, 60); // 60 menit
-
-        return response()->json($blog)->withCookie($cookie);
+        return response()->json($blog);
     }
 }
