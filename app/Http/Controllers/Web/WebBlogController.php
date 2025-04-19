@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class WebBlogController extends Controller
 {
@@ -15,7 +15,7 @@ class WebBlogController extends Controller
         $perPage = 6;
         $cacheKey = "web_blogs_page_{$page}";
 
-        $blogs = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
+        $blogs = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($perPage) {
             return Blog::where('status', 'publish')
                 ->latest()
                 ->paginate($perPage);
@@ -26,9 +26,9 @@ class WebBlogController extends Controller
 
     public function show($slug)
     {
-        $cacheKey = 'web_blog_' . $slug;
+        $cacheKey = "web_blog_slug_{$slug}";
 
-        $blog = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($slug) {
+        $blog = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($slug) {
             return Blog::where('slug', $slug)
                 ->where('status', 'publish')
                 ->firstOrFail();
