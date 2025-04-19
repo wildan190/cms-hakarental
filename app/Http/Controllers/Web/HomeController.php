@@ -13,15 +13,9 @@ class HomeController extends Controller
     public function index()
     {
         $gallery = Gallery::latest()->take(6)->get();
-
-        $mobil = Mobil::where(function ($query) {
-            $query->where('nama', 'like', '%Avanza%')
-                ->orWhere('nama', 'like', '%Sigra%')
-                ->orWhere('nama', 'like', '%Reborn%')
-                ->orWhere('nama', 'like', '%Zenix%');
-        })->latest()->take(4)->get();
-
+        $mobil = Mobil::latest()->take(4)->get();
         $testimoni = Testimoni::latest()->take(6)->get();
+
         $faq = Faq::latest()->take(5)->get();
 
         return response()->json([
