@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Cookie;
 
 class WebBlogController extends Controller
 {
@@ -21,7 +22,10 @@ class WebBlogController extends Controller
                 ->paginate($perPage);
         });
 
-        return response()->json($blogs);
+        // Simpan cookie halaman terakhir
+        $cookie = Cookie::make('last_blog_page', $page, 60); // 60 menit
+
+        return response()->json($blogs)->withCookie($cookie);
     }
 
     public function show($slug)
@@ -34,6 +38,9 @@ class WebBlogController extends Controller
                 ->firstOrFail();
         });
 
-        return response()->json($blog);
+        // Simpan cookie slug terakhir yang dibuka
+        $cookie = Cookie::make('last_blog_slug', $slug, 60); // 60 menit
+
+        return response()->json($blog)->withCookie($cookie);
     }
 }
