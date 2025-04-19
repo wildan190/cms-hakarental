@@ -30,15 +30,26 @@ class WebBlogController extends Controller
     public function show($slug)
     {
         $cacheKey = "web_blog_slug_{$slug}";
-
+    
         $blog = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($slug) {
             return Blog::where('slug', $slug)
                 ->where('status', 'publish')
                 ->firstOrFail();
         });
-
-        $cookie = Cookie::make('last_blog_slug', $slug, 60);
-
-        return response()->json($blog)->withCookie($cookie);
+    
+        // Ambil topik terkait (tanpa blog yang sedang ditampilkan)
+        $related = Cache::store('redis')->remember("web_blog_related_exclude_{$slug}", now()->addMinutes(10), function () use ($slug) {
+            return Blog::where('slug', '!=', $slug)
+                ->where('status', 'publish')
+                ->latest()
+                ->take(3)
+                ->get();
+        });
+    
+        return response()->json([
+            'blog' => $blog,
+            'related' => $related,
+        ]);
     }
+    
 }
