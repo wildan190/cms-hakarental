@@ -31,23 +31,16 @@ class WebBlogController extends Controller
     public function show($slug)
     {
         $cacheKey = "web_blog_slug_{$slug}";
-    
+
         $blog = Cache::store('redis')->remember($cacheKey, now()->addMinutes(10), function () use ($slug) {
             return Blog::where('slug', $slug)
                 ->where('status', 'publish')
                 ->firstOrFail();
         });
-    
-        // Mendapatkan topik terkait berdasarkan pencocokan judul atau deskripsi
-        $relatedBlogs = $blog->relatedBlogs();  // Ambil topik terkait
-    
+
         // Simpan cookie slug terakhir yang dibuka
         $cookie = Cookie::make('last_blog_slug', $slug, 60); // 60 menit
-    
-        return response()->json([
-            'blog' => $blog,
-            'relatedBlogs' => $relatedBlogs // Kirim data terkait
-        ])->withCookie($cookie);
+
+        return response()->json($blog)->withCookie($cookie);
     }
-    
 }
