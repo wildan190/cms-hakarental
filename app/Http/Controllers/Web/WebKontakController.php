@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Metadata;
+use Illuminate\Support\Facades\Cache;
 
 class WebKontakController extends Controller
 {
     public function index()
     {
-        $metadata = Metadata::first();
+        // Cache selama 10 menit
+        $metadata = Cache::remember('web_kontak_metadata', now()->addMinutes(10), function () {
+            return Metadata::first();
+        });
 
         return response()->json([
             'phone' => $metadata?->phone,
