@@ -5,12 +5,10 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Blog;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Cookie;
-use Illuminate\Http\Request;
 
 class WebBlogController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         $cacheKey = 'web_blog_all';
 
@@ -20,10 +18,7 @@ class WebBlogController extends Controller
                 ->get();
         });
 
-        // Simpan cookie halaman yang sedang dilihat (hanya info, tidak memengaruhi data)
-        $cookie = Cookie::make('last_blog_list_viewed', now()->toDateTimeString(), 60);
-
-        return response()->json($blogs)->withCookie($cookie);
+        return response()->json($blogs);
     }
 
     public function show($slug)
@@ -36,9 +31,6 @@ class WebBlogController extends Controller
                 ->firstOrFail();
         });
 
-        // Simpan cookie slug artikel terakhir yang dibuka
-        $cookie = Cookie::make('last_blog_opened', $slug, 60);
-
-        return response()->json($blog)->withCookie($cookie);
+        return response()->json($blog);
     }
 }
