@@ -3,41 +3,37 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Faq;
+use App\Models\Gallery;
 use App\Models\Mobil;
-use Illuminate\Http\Request;
+use App\Models\Testimoni;
+use Illuminate\Support\Facades\Cache;
 
-class WebMobilController extends Controller
+class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $mobil = Mobil::query();
+        $cachedData = Cache::remember('web_home_data', now()->addMinutes(10), function () {
+            $gallery = Gallery::latest()->take(6)->get();
 
-        // Search (nama, merk, type)
-        if ($request->has('search')) {
-            $search = strtolower($request->search);
-            $mobil->where(function ($q) use ($search) {
-                $q->whereRaw('LOWER(name) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('LOWER(merk) LIKE ?', ["%$search%"])
-                    ->orWhereRaw('LOWER(type) LIKE ?', ["%$search%"]);
-            });
-        }
+            $mobil = Mobil::where(function ($query) {
+                $query->where('name', 'like', '%Avanza%')
+                      ->orWhere('name', 'like', '%Sigra%')
+                      ->orWhere('name', 'like', '%Reborn%')
+                      ->orWhere('name', 'like', '%Zenix%');
+            })->latest()->take(4)->get();
 
-        if ($request->has('seat')) {
-            $mobil->where('seat', $request->seat);
-        }
+            $testimoni = Testimoni::latest()->take(6)->get();
+            $faq = Faq::latest()->take(5)->get();
 
-        // Filter: merk
-        if ($request->has('merk')) {
-            $merk = strtolower($request->merk);
-            $mobil->whereRaw('LOWER(merk) = ?', [$merk]);
-        }
+            return [
+                'gallery' => $gallery,
+                'mobil' => $mobil,
+                'testimoni' => $testimoni,
+                'faq' => $faq,
+            ];
+        });
 
-        // Filter: transmission (otomatis / manual)
-        if ($request->has('transmission')) {
-            $transmission = strtolower($request->transmission);
-            $mobil->whereRaw('LOWER(transmission) = ?', [$transmission]);
-        }
-
-        return response()->json($mobil->latest()->get());
+        return response()->json($cachedData);
     }
 }
